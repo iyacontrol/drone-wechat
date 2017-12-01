@@ -1,6 +1,6 @@
 package message
 
-import "encoding/xml"
+import "github.com/iyacontrol/drone-wechat/wechat/util"
 
 // MsgType 基本消息类型
 type MsgType string
@@ -14,63 +14,54 @@ const (
 	MsgTypeVoice = "voice"
 	//MsgTypeVideo 表示视频消息
 	MsgTypeVideo = "video"
-	//MsgTypeShortVideo 表示短视频消息[限接收]
-	MsgTypeShortVideo = "shortvideo"
-	//MsgTypeLocation 表示坐标消息[限接收]
-	MsgTypeLocation = "location"
-	//MsgTypeLink 表示链接消息[限接收]
-	MsgTypeLink = "link"
-	//MsgTypeMusic 表示音乐消息[限回复]
-	MsgTypeMusic = "music"
+	//MsgTypeFile 表示文件
+	MsgTypeFile = "file"
+	//MsgTypeTextCard 表示文本卡片
+	MsgTypeTextCard = "textcard"
+	//MsgTypeMpNews 表示mp图文消息[限回复]
+	MsgTypeMpNews = "mpnews"
 	//MsgTypeNews 表示图文消息[限回复]
 	MsgTypeNews = "news"
-	//MsgTypeTransfer 表示消息消息转发到客服
-	MsgTypeTransfer = "transfer_customer_service"
-	//MsgTypeEvent 表示事件推送消息
-	MsgTypeEvent = "event"
 )
 
-//EncryptedXMLMsg 安全模式下的消息体
-type EncryptedXMLMsg struct {
-	XMLName      struct{} `xml:"xml" json:"-"`
-	ToUserName   string   `xml:"ToUserName" json:"ToUserName"`
-	EncryptedMsg string   `xml:"Encrypt"    json:"Encrypt"`
+// ResponseJsonMsg 需要返回的消息体
+type ResponseJsonMsg struct {
+	util.CommonError
+	InvalidUser  string `json:"invaliduser"`
+	InvalidParty string `json:"invalidparty"`
+	InvalidTag   string `json:"invalidtag"`
 }
 
-//ResponseEncryptedXMLMsg 需要返回的消息体
-type ResponseEncryptedXMLMsg struct {
-	XMLName      struct{} `xml:"xml" json:"-"`
-	EncryptedMsg string   `xml:"Encrypt"      json:"Encrypt"`
-	MsgSignature string   `xml:"MsgSignature" json:"MsgSignature"`
-	Timestamp    int64    `xml:"TimeStamp"    json:"TimeStamp"`
-	Nonce        string   `xml:"Nonce"        json:"Nonce"`
+// CommonContent 消息中通用的结构
+type CommonContent struct {
+	ToUser  string  `json:"touser"`
+	ToParty string  `json:"toparty"`
+	ToTag   string  `json:"totag"`
+	AgentID int     `json:"agentid"`
+	MsgType MsgType `json:"msgtype"`
 }
 
-// CommonToken 消息中通用的结构
-type CommonToken struct {
-	XMLName      xml.Name `xml:"xml"`
-	ToUserName   string   `xml:"ToUserName"`
-	FromUserName string   `xml:"FromUserName"`
-	CreateTime   int64    `xml:"CreateTime"`
-	MsgType      MsgType  `xml:"MsgType"`
+//SetToUser set ToUser
+func (msg *CommonContent) SetToUser(toUser string) {
+	msg.ToUser = toUser
 }
 
-//SetToUserName set ToUserName
-func (msg *CommonToken) SetToUserName(toUserName string) {
-	msg.ToUserName = toUserName
+//SetToParty set ToParty
+func (msg *CommonContent) SetToParty(toParty string) {
+	msg.ToParty = toParty
 }
 
-//SetFromUserName set FromUserName
-func (msg *CommonToken) SetFromUserName(fromUserName string) {
-	msg.FromUserName = fromUserName
+//SetToTag set ToTag
+func (msg *CommonContent) SetToTag(toTag string) {
+	msg.ToTag = toTag
 }
 
-//SetCreateTime set createTime
-func (msg *CommonToken) SetCreateTime(createTime int64) {
-	msg.CreateTime = createTime
+//SetAgentID set AgentID
+func (msg *CommonContent) SetAgentID(agentID int) {
+	msg.AgentID = agentID
 }
 
 //SetMsgType set MsgType
-func (msg *CommonToken) SetMsgType(msgType MsgType) {
+func (msg *CommonContent) SetMsgType(msgType MsgType) {
 	msg.MsgType = msgType
 }

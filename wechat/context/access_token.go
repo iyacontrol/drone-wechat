@@ -9,7 +9,7 @@ import (
 
 const (
 	//AccessTokenURL 获取access_token的接口
-	AccessTokenURL = "https://qyapi.weixin.qq.com/cgi-bin/token"
+	AccessTokenURL = "https://qyapi.weixin.qq.com/cgi-bin/gettoken"
 )
 
 //ResAccessToken struct
@@ -35,7 +35,7 @@ func (ctx *Context) GetAccessToken() (accessToken string, err error) {
 
 //GetAccessTokenFromServer 强制从微信服务器获取token
 func (ctx *Context) GetAccessTokenFromServer() (resAccessToken ResAccessToken, err error) {
-	url := fmt.Sprintf("%s?grant_type=client_credential&appid=%s&secret=%s", AccessTokenURL, ctx.AppID, ctx.AppSecret)
+	url := fmt.Sprintf("%s?&corpid=%s&corpsecret=%s", AccessTokenURL, ctx.CorpID, ctx.CorpSecret)
 	var body []byte
 	body, err = util.HTTPGet(url)
 	if err != nil {

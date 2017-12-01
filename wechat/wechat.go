@@ -1,10 +1,8 @@
 package wechat
 
 import (
-	"net/http"
-
 	"github.com/iyacontrol/drone-wechat/wechat/context"
-	"github.com/iyacontrol/drone-wechat/wechat/server"
+	"github.com/iyacontrol/drone-wechat/wechat/util"
 )
 
 // Wechat struct
@@ -14,8 +12,8 @@ type Wechat struct {
 
 // Config for user
 type Config struct {
-	AppID          string
-	AppSecret      string
+	CorpID         string
+	CorpSecret     string
 	Token          string
 	EncodingAESKey string
 }
@@ -28,15 +26,13 @@ func NewWechat(cfg *Config) *Wechat {
 }
 
 func copyConfigToContext(cfg *Config, context *context.Context) {
-	context.AppID = cfg.AppID
-	context.AppSecret = cfg.AppSecret
+	context.CorpID = cfg.CorpID
+	context.CorpSecret = cfg.CorpSecret
 	context.Token = cfg.Token
 	context.EncodingAESKey = cfg.EncodingAESKey
 }
 
-// GetServer 消息管理
-func (wc *Wechat) GetServer(req *http.Request, writer http.ResponseWriter) *server.Server {
-	wc.Context.Request = req
-	wc.Context.Writer = writer
-	return server.NewServer(wc.Context)
+// SendText 发送文本消息
+func (wc *Wechat) SendText(text string) error {
+	reply, err := util.PostJSON("")
 }
